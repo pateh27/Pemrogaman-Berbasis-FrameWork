@@ -1,0 +1,59 @@
+/* Hero Section */
+.hero {
+    background-color: #4a5568;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
+/* Main Section */
+.mainSection {
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.productGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.productCard {
+    border: 1px solid #e2e8f0;
+    padding: 1rem;
+    border-radius: 4px;
+
+    h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: #718096;
+        font-size: 0.9rem;
+    }
+}
+
+.price {
+    font-weight: bold;
+    color: #2d3748;
+    margin-top: 0.5rem;
+}
