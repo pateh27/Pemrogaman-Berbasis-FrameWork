@@ -1,5 +1,6 @@
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { app } from "./firebase";
+
 
 const db = getFirestore(app);
 
@@ -15,5 +16,15 @@ export async function retrieveProducts(collectionName: string) {
     } catch (error) {
         console.error(`Error retrieving products from ${collectionName}:`, error);
         throw error;
+    }
+}
+
+export async function retrieveDataByID(collectionName: string, id: string) {
+    const snapshot = await getDoc(doc(db, collectionName, id));
+    
+    if (snapshot.exists()) {
+        return { id: snapshot.id, ...snapshot.data() };
+    } else {
+        throw new Error(`Document with ID ${id} not found in collection ${collectionName}`);
     }
 }
