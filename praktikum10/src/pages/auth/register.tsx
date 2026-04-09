@@ -1,4 +1,4 @@
-import TampilanRegister from "../views/auth/register/register";
+import TampilanRegister from "../../views/auth/register/register";
 import Link from "next/link";
 
 const halamanRegister = () => {

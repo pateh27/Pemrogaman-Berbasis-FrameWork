@@ -1,5 +1,5 @@
 import styles from "./produk.module.scss";
-import { ProductType } from "../../produk";
+import { ProductType } from "../../pages/produk";
 type Props = {
     products: ProductType[];
 };
