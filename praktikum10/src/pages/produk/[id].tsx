@@ -24,37 +24,45 @@ export default HalamanProduk;
 
 //server side rendering
 export async function getServerSideProps({ params }: { params: { id: string } }) {
-    const res = await fetch(`http://localhost:3000/api/produk/${params.id}`);
-    const respone = await res.json();
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk/${params.id}`);
+        const response = await res.json();
 
-    return {
-        props: {
-            id: respone.data,
-        }
+        return {
+            props: {
+                product: response.data,
+            },
+        };
+    } catch (error) {
+        return {
+            props: {
+                product: null,
+            },
+        };
     }
 }
 
-export async function getStaticPaths() {
-    const res = await fetch (`http://localhost:3000/api/produk`)
-    const response = await res.json();
+// export async function getStaticPaths() {
+//     const res = await fetch (`http://localhost:3000/api/produk`)
+//     const response = await res.json();
 
-    const paths = response.data.map((product: ProductType) => ({
-        params: { id: product.id }
-    }));
+//     const paths = response.data.map((product: ProductType) => ({
+//         params: { id: product.id }
+//     }));
 
-    return {
-        paths,
-        fallback: false
-    };
-}
+//     return {
+//         paths,
+//         fallback: false
+//     };
+// }
 
-export async function getStaticProps({params}: { params:{ id: string } }) {
-    const res = await fetch(`http://localhost:3000/api/produk/${params?.id}`);
-    const response = await res.json() as { data: ProductType[] };
+// export async function getStaticProps({params}: { params:{ id: string } }) {
+//     const res = await fetch(`http://localhost:3000/api/produk/${params?.id}`);
+//     const response = await res.json() as { data: ProductType[] };
 
-    return {
-        props: {
-            id: response.data
-        }
-    };
-}
+//     return {
+//         props: {
+//             id: response.data
+//         }
+//     };
+// }
