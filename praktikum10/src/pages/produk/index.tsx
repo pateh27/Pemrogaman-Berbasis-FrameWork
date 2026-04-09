@@ -13,7 +13,7 @@ export type ProductType = {
 
 const Kategori = () => {
     const { query } = useRouter();
-    const { data, isLoading } = useSWR("/api/produk", fetcher);
+    const { data, isLoading, error } = useSWR("/api/produk", fetcher);
     const product: ProductType[] = isLoading ? [] : data?.data ?? [];
 
     return (

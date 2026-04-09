@@ -4,13 +4,14 @@ import { useRouter } from "next/router";
 import styles from "./login.module.scss";
 
 const halamanLogin = () => {
-    const {push} = useRouter();
+    const { push } = useRouter();
 
     const handlerLogin = () => {
-        push('/produk');
-    }
+        document.cookie = "isLogin=true; path=/";
+        push("/produk");
+    };
     
-       return(
+    return(
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
@@ -52,7 +53,7 @@ const halamanLogin = () => {
                     Belum punya akun?{" "}
                     <Link href="/auth/register" className="text-blue-600 hover:text-blue-800 font-medium">
                         Daftar di sini
-                    </Link>=
+                    </Link>
                 </p>
             </div>
         </div>
