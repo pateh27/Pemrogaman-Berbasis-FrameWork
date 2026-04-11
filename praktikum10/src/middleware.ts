@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const loginCookie = request.cookies.get("isLogin")?.value;
-    const isLogin = loginCookie === "true";
+
+    const token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    const isLogin = !!token;
     const isProtectedRoute = pathname.startsWith("/produk");
 
     if (isProtectedRoute && !isLogin) {

@@ -19,7 +19,7 @@ const Kategori = () => {
     return (
         <div>
             <TampilanProduk product={product} />
-            <p>Produk: {query.produk}</p>
+            <p>{query.produk}</p>
         </div>
     );
 };
