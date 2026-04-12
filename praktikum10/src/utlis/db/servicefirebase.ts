@@ -1,30 +1,77 @@
-import { getFirestore, collection, getDocs, getDoc, doc } from "firebase/firestore";
-import { app } from "./firebase";
-
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    getDoc,
+    doc,
+    query,
+    addDoc,
+    where,
+} from "firebase/firestore";
+import app from "./firebase";
+import bcrypt from "bcrypt";
 
 const db = getFirestore(app);
 
 export async function retrieveProducts(collectionName: string) {
-    try {
-        const snapshot = await getDocs(collection(db, collectionName));
-        const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        console.log(`Successfully retrieved ${data.length} products from ${collectionName}`);
-        return data;
-    } catch (error) {
-        console.error(`Error retrieving products from ${collectionName}:`, error);
-        throw error;
-    }
+    const snapshot = await getDocs(collection(db, collectionName));
+    const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
+    return data;
 }
 
 export async function retrieveDataByID(collectionName: string, id: string) {
     const snapshot = await getDoc(doc(db, collectionName, id));
-    
-    if (snapshot.exists()) {
-        return { id: snapshot.id, ...snapshot.data() };
-    } else {
-        throw new Error(`Document with ID ${id} not found in collection ${collectionName}`);
+    const data = snapshot.data();
+    return data;
+}
+
+export async function signUp(
+    userData: {
+        email: string;
+        fullname: string;
+        password: string;
+        role?: string;
+    },
+    callback: Function,
+) {
+    if (userData.password.length < 6) {
+        callback({
+            status: "error",
+            message: "Password minimal 6 karakter",
+        });
     }
+    const q = query(
+        collection(db, "members"),
+        where("email", "==", userData.email),
+    );
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
+
+    if (data.length > 0) {
+        callback({
+            status: "error",
+            message: "Email sudah terdaftar, gunakan email lain",
+        });
+    } else {
+        try {
+            userData.password = await bcrypt.hash(userData.password, 10);
+            userData.role = "members";
+            await addDoc(collection(db, "members"), userData);
+            callback({
+                status: "success",
+                message: "Member registered successfully",
+            });
+        } catch (error) {
+            callback({
+                status: "error",
+                message: "User gagal didaftarkan",
+            });
+        }
+    } 
 }
