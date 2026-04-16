@@ -7,6 +7,7 @@ import {
     query,
     addDoc,
     where,
+    updateDoc,
 } from "firebase/firestore";
 import app from "./firebase";
 import bcrypt from "bcrypt";
@@ -54,6 +55,7 @@ export async function signUp(
             status: "error",
             message: "Password minimal 6 karakter",
         });
+        return;
     }
     const q = query(
         collection(db, "members"),
@@ -86,4 +88,41 @@ export async function signUp(
             });
         }
     } 
+}
+
+export async function signInWithGoogle(userData: any, callback: any ) {
+    try {
+        const q = query(
+            collection(db, "members"),
+            where("email", "==", userData.email),
+        );
+
+        const querySnapshot = await getDocs(q);
+        const data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        if (data.length > 0) {
+            userData.role = data[0].role;
+            await updateDoc(doc(db, "members", data[0].id), userData);
+            callback({
+                status: "success",
+                message: "Member logged in successfully",
+                data: data[0],
+            });
+        } else {
+            userData.role = "members";
+            await addDoc(collection(db, "members"), userData);
+            callback({
+                status: "success",
+                message: "User registered and logged in successfully",
+                data: userData,
+            });
+        }
+    } catch (error: any) {
+        callback({
+            status: "error",
+            message: "failed to register user with Google",
+        });
+    }
 }

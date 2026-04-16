@@ -21,15 +21,16 @@ const HalamanLogin = () => {
             setError("Email dan password harus diisi");
             return;
         }
-
-        setIsLoading(true);
-
         const res = await signIn("credentials", {
             redirect: false,
             email,
             password,
             callbackUrl: "/produk",
         });
+;
+
+        setIsLoading(true);
+
 
         setIsLoading(false);
 
@@ -80,13 +81,23 @@ const HalamanLogin = () => {
                             className={styles.login__form__input}
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className={styles.login__form__item__button}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? "Loading..." : "Login"}
-                    </button>
+                    <div className="flex flex-col gap-4">
+                        <button
+                            type="submit"
+                            className={styles.login__form__item__button}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? "Loading..." : "Login"}
+                        </button>
+                        
+                        <button 
+                            onClick={() => signIn("google", { callbackUrl: "/produk", redirect: false })}
+                            className={styles.login__form__item__button}
+                            disabled={isLoading}
+                            >
+                            {isLoading ? "Loading..." : "Sign In with Google"}
+                        </button>
+                    </div>
                 </form>
                 <br />
                 <p className={styles.login__form__item__text}>

@@ -1,7 +1,8 @@
 import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { signIn as getUserByEmail } from "../../../utlis/db/servicefirebase";
+import { signIn as getUserByEmail, signInWithGoogle } from "../../../utlis/db/servicefirebase";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -39,6 +40,10 @@ export const authOptions: NextAuthOptions = {
                 };
             }
 
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
         })
     ],
 
@@ -48,6 +53,26 @@ export const authOptions: NextAuthOptions = {
                 token.email = user.email;
                 token.fullname = user.fullname;
                 token.role = user.role;
+            }
+            if (account?.provider === "google") {
+                const data = {
+                    fullname: user.name,
+                    email: user.email,
+                    img: user.img,
+                    type: account.provider,
+                };
+                await signInWithGoogle(data, (result: any) => {
+                    if (result.status) {
+                        token.fullname = result.data.fullname;
+                        token.email = result.data.email;
+                        token.img = result.data.img;
+                        token.type = result.data.type;
+                        token.role = result.data.role;
+
+                    }
+                }); 
+                    
+                
             }
             return token;
         },
@@ -60,6 +85,12 @@ export const authOptions: NextAuthOptions = {
             }
             if (token.role) {
                 session.user.role = token.role
+            }
+            if (token.img) {
+                session.user.img = token.img
+            }
+            if (token.type) {
+                session.user.type = token.type
             }
             return session;
         },  
