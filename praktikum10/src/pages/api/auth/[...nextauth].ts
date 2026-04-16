@@ -1,5 +1,7 @@
 import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import { signIn as getUserByEmail } from "../../../utlis/db/servicefirebase";
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -10,23 +12,31 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "credentials",
             credentials: {
-                fullname: { label: "Full Name", type: "text" },
+                //fullname: { label: "Full Name", type: "text" },
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" }
             },
 
             async authorize(credentials) {
-                const user : any = {
-                    id : '1',
-                    email: credentials?.email,
-                    password: credentials?.password,
-                    fullname: credentials?.fullname
-                }
-                if (user) {
-                    return user;
-                }else {
-                    return null
-                }
+                if (!credentials || !credentials.email || !credentials.password) return null;
+
+                const user: any = await getUserByEmail(credentials.email);
+
+                if (!user) return null;
+
+                const isPasswordValid = await bcrypt.compare(
+                    credentials.password,
+                    user.password,
+                );
+
+                if (!isPasswordValid) return null;
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    fullname: user.fullname,
+                    role: user.role,
+                };
             }
 
         })
@@ -37,6 +47,7 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === "credentials" && user) {
                 token.email = user.email;
                 token.fullname = user.fullname;
+                token.role = user.role;
             }
             return token;
         },
@@ -47,8 +58,16 @@ export const authOptions: NextAuthOptions = {
             if (token.fullname) {
                 session.user.fullname = token.fullname
             }
+            if (token.role) {
+                session.user.role = token.role
+            }
             return session;
         },  
+    },
+
+
+    pages: {
+        signIn: "/auth/login",
     },
 };
 

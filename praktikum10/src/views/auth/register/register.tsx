@@ -70,7 +70,7 @@ const halamanRegister = () => {
                             id="email"
                             name="email"
                             placeholder="Email"
-                            className={styles.register__form__item__input}
+                            className={styles.register__form__input}
                         />
                     </div>
                     <div className={styles.register__form__item}>
@@ -85,7 +85,7 @@ const halamanRegister = () => {
                             id="fullname"
                             name="fullname" // ← fix: harus sama dengan formData.get("fullname")
                             placeholder="Fullname"
-                            className={styles.register__form__item__input}
+                            className={styles.register__form__input}
                         />
                     </div>
                     <div className={styles.register__form__item}>
@@ -100,7 +100,7 @@ const halamanRegister = () => {
                             id="password"
                             name="password"
                             placeholder="Password (min. 6 karakter)"
-                            className={styles.register__form__item__input}
+                            className={styles.register__form__input}
                         />
                     </div>
                     <button

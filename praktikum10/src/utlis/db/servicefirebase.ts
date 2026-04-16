@@ -28,6 +28,18 @@ export async function retrieveDataByID(collectionName: string, id: string) {
     return data;
 }
 
+export async function signIn(
+    email: string
+) {
+    const q = query(collection(db, "members"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
+    return data.length > 0 ? data[0] : null;
+}
+
 export async function signUp(
     userData: {
         email: string;
