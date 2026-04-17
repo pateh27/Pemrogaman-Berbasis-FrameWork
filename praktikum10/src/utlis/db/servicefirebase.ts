@@ -98,11 +98,10 @@ export async function signUp(
 }
 
 // ✅ Diubah dari callback pattern → return Promise
-export async function signInWithGoogle(userData: any): Promise<{
-    status: string;
-    message: string;
-    data?: MemberData;
-}> {
+export async function signInWithProvider(
+    userData: any,
+    providerName: string
+) {
     try {
         const q = query(
             collection(db, "members"),
@@ -117,66 +116,44 @@ export async function signInWithGoogle(userData: any): Promise<{
 
         if (data.length > 0) {
             userData.role = data[0].role;
-            await updateDoc(doc(db, "users", data[0].id), userData);
+
+            await updateDoc(doc(db, "members", data[0].id), userData);
+
             return {
                 status: "success",
-                message: "User logged in successfully",
+                message: `User logged in with ${providerName} successfully`,
                 data: data[0],
             };
         } else {
             userData.role = "members";
+
             const docRef = await addDoc(collection(db, "members"), userData);
+
             return {
                 status: "success",
-                message: "User registered and logged in successfully",
+                message: `User registered with ${providerName}`,
                 data: { id: docRef.id, ...userData },
             };
         }
-    } catch (error: any) {
+    } catch (error) {
         return {
             status: "error",
-            message: "failed to register user with Google",
+            message: `Failed with ${providerName}`,
         };
     }
 }
 
-export async function signInWithGithub(userData: any, callback: any) {
-    try {
-        const q = query(
-            collection(db, "members"),
-            where("email", "==", userData.email),
-        );
-        
-        const querySnapshot = await getDocs(q);
-        const data: any = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
+export async function signInWithGithub(
+    userData: any,
+    providerName: string
+) {
+    return signInWithProvider(userData, providerName);
+}
 
-         if (data.length > 0) {
-      // User sudah ada, update data dengan informasi dari GitHub
-      userData.role = data[0].role;
-      await updateDoc(doc(db, "users", data[0].id), userData);
-      callback({
-        status: true,
-        message: "User registered and logged in with GitHub",
-        data: userData,
-      });
-    } else {
-      // User belum ada, tambahkan ke database
-      userData.role = "member";
-      await addDoc(collection(db, "users"), userData);
-      callback({
-        status: true,
-        message: "User registered and logged in with GitHub",
-        data: userData,
-      });
-    }
-  } catch (error: any) {
-    // tangani error
-    callback({
-      status: false,
-      message: "Failed to register user with GitHub",
-    })
-  }
+export async function signInWithGoogle(
+    userData: any,
+    
+    providerName: string
+) {
+    return signInWithProvider(userData, providerName);
 }
