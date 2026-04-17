@@ -1,4 +1,9 @@
+import { useSession } from "next-auth/react";
+
 const HalamanAdmin = () => {
+    const {data: session} = useSession();
+    console.log("SESSION:", session);
+
     return (
         <div>
             <div className="admin">

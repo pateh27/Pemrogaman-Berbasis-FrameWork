@@ -14,6 +14,15 @@ import bcrypt from "bcrypt";
 
 const db = getFirestore(app);
 
+interface MemberData {
+    id: string;
+    email: string;
+    fullname?: string;
+    password?: string;
+    role: string;
+    [key: string]: any;
+}
+
 export async function retrieveProducts(collectionName: string) {
     const snapshot = await getDocs(collection(db, collectionName));
     const data = snapshot.docs.map((doc) => ({
@@ -29,15 +38,13 @@ export async function retrieveDataByID(collectionName: string, id: string) {
     return data;
 }
 
-export async function signIn(
-    email: string
-) {
+export async function signIn(email: string) {
     const q = query(collection(db, "members"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-    }));
+    })) as MemberData[];
     return data.length > 0 ? data[0] : null;
 }
 
@@ -65,7 +72,7 @@ export async function signUp(
     const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-    }));
+    })) as MemberData[];
 
     if (data.length > 0) {
         callback({
@@ -87,10 +94,15 @@ export async function signUp(
                 message: "User gagal didaftarkan",
             });
         }
-    } 
+    }
 }
 
-export async function signInWithGoogle(userData: any, callback: any ) {
+// ✅ Diubah dari callback pattern → return Promise
+export async function signInWithGoogle(userData: any): Promise<{
+    status: string;
+    message: string;
+    data?: MemberData;
+}> {
     try {
         const q = query(
             collection(db, "members"),
@@ -101,28 +113,70 @@ export async function signInWithGoogle(userData: any, callback: any ) {
         const data = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-        }));
+        })) as MemberData[];
+
         if (data.length > 0) {
             userData.role = data[0].role;
-            await updateDoc(doc(db, "members", data[0].id), userData);
-            callback({
+            await updateDoc(doc(db, "users", data[0].id), userData);
+            return {
                 status: "success",
-                message: "Member logged in successfully",
+                message: "User logged in successfully",
                 data: data[0],
-            });
+            };
         } else {
             userData.role = "members";
-            await addDoc(collection(db, "members"), userData);
-            callback({
+            const docRef = await addDoc(collection(db, "members"), userData);
+            return {
                 status: "success",
                 message: "User registered and logged in successfully",
-                data: userData,
-            });
+                data: { id: docRef.id, ...userData },
+            };
         }
     } catch (error: any) {
-        callback({
+        return {
             status: "error",
             message: "failed to register user with Google",
-        });
+        };
     }
+}
+
+export async function signInWithGithub(userData: any, callback: any) {
+    try {
+        const q = query(
+            collection(db, "members"),
+            where("email", "==", userData.email),
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const data: any = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+
+         if (data.length > 0) {
+      // User sudah ada, update data dengan informasi dari GitHub
+      userData.role = data[0].role;
+      await updateDoc(doc(db, "users", data[0].id), userData);
+      callback({
+        status: true,
+        message: "User registered and logged in with GitHub",
+        data: userData,
+      });
+    } else {
+      // User belum ada, tambahkan ke database
+      userData.role = "member";
+      await addDoc(collection(db, "users"), userData);
+      callback({
+        status: true,
+        message: "User registered and logged in with GitHub",
+        data: userData,
+      });
+    }
+  } catch (error: any) {
+    // tangani error
+    callback({
+      status: false,
+      message: "Failed to register user with GitHub",
+    })
+  }
 }

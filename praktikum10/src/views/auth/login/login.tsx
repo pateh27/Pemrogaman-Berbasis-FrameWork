@@ -25,7 +25,7 @@ const HalamanLogin = () => {
             redirect: false,
             email,
             password,
-            callbackUrl: "/produk",
+            callbackUrl: "/",
         });
 ;
 
@@ -91,12 +91,19 @@ const HalamanLogin = () => {
                         </button>
                         
                         <button 
-                            onClick={() => signIn("google", { callbackUrl: "/produk", redirect: false })}
+                            onClick={() => signIn("google", { callbackUrl: "/", redirect: false })}
                             className={styles.login__form__item__button}
                             disabled={isLoading}
                             >
                             {isLoading ? "Loading..." : "Sign In with Google"}
                         </button>
+
+                       <button 
+                            onClick={() => signIn("github", { callbackUrl: "/", redirect: false })} 
+                            className={styles.login__form__item__button} disabled={isLoading}
+                            >
+                            {isLoading ? "Loading..." : "Sign in with GitHub"}
+                    </button>
                     </div>
                 </form>
                 <br />
