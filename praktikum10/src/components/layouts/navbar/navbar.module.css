@@ -133,8 +133,8 @@
   background: rgba(239, 68, 68, 0.2);
 }
 .navbar__user__image {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #3b82f6;
