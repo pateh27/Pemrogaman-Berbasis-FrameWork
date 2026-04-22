@@ -1,14 +1,22 @@
+import Script from "next/script";
+import { useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import styles from "./navbar.module.css";
 
 const Navbar = () => {
   const {data}: any = useSession();
+  const titleRef = useRef<HTMLDivElement>(null);
   return (
     <div className={styles.navbar}>
-        <div className={styles.navbar__brand}>
-          MyApp
-        </div>
-       <div className={styles.navbar__right}>
+         <div className={styles.navbar__brand} ref={titleRef} id="tittle"></div>
+        <Script 
+          id="tittle-script" 
+          strategy='lazyOnload'
+          dangerouslySetInnerHTML={{
+            __html: `document.getElementById("tittle").innerText = 'MyApp';`
+          }}
+        />
+        <div className={styles.navbar__right}>
           {data ? (
             <>
             <div className={styles.navbar__user}>
