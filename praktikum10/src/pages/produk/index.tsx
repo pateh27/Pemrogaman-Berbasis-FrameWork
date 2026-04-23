@@ -14,11 +14,11 @@ export type ProductType = {
 const Kategori = () => {
     const { query } = useRouter();
     const { data, isLoading, error } = useSWR("/api/produk", fetcher);
-    const product: ProductType[] = isLoading ? [] : data?.data ?? [];
+    const product: ProductType[] = data?.data ?? [];
 
     return (
         <div>
-            <TampilanProduk product={product} />
+            <TampilanProduk products={product} isLoading={isLoading} />
             <p>{query.produk}</p>
         </div>
     );
