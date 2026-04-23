@@ -7,7 +7,7 @@ const Custom404 = () => {
       <title>404 - Not Found</title>
     </head>
     <div className={styles.error}>
-      <img src="/page-not-found.png" alt="404" className={styles.error__image}/>
+      {/* <img src="/page-not-found.png" alt="404" className={styles.error__image}/> */}
 
       <h1 className={styles.error__title}>
         404 - Halaman Tidak Ditemukan

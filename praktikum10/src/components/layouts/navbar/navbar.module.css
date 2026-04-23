@@ -1,15 +1,169 @@
 .navbar {
-  ul {
-    li {
-        a{
-            width:100%;
-            height: 60px;
-            background-color: #333;
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-        }
-    }
+  width: 100%;
+  height: 64px;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Logo / Brand */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #f8fafc;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+}
+
+.navbar__brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Nav links (opsional) */
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.navbar__nav-link {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  text-decoration: none;
+}
+
+.navbar__nav-link:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar__nav-link.active {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Right Section */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* User info */
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Avatar inisial */
+.navbar__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #1e40af;
+  border: 1.5px solid rgba(59, 130, 246, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #93c5fd;
+}
+
+/* Divider */
+.navbar__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Button base */
+.navbar__button {
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+/* Sign In */
+.navbar__button--primary {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.navbar__button--primary:hover {
+  background: #2563eb;
+}
+
+/* Sign Out */
+.navbar__button--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.navbar__button--danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+.navbar__user__image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .navbar__nav {
+    display: none;
+  }
+
+  .navbar__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.95;
+  }
+
+
+  .navbar__user__image:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
   }
 }

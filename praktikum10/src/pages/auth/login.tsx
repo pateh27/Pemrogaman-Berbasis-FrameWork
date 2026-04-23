@@ -1,9 +1,7 @@
-import TampilanLogin from "../../views/auth/login/login";
+import TampilanLogin from "@/views/auth/login/login";
 
 const halamanLogin = () => {
-    return (
-        <TampilanLogin />
-    );
+    return <TampilanLogin />;
 };
 
 export default halamanLogin;

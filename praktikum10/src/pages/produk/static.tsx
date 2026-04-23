@@ -19,6 +19,7 @@ export async function getStaticProps() {
             props: {
                 products: data ?? [],
             },
+            revalidate: 10,
         };
     } catch (error) {
         console.error("getStaticProps error:", error);
@@ -26,6 +27,7 @@ export async function getStaticProps() {
             props: {
                 products: [],
             },
+            revalidate: 10,
         };
     }
 }
